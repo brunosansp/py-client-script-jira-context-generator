@@ -1,0 +1,15 @@
+#!/bin/bash
+# Wrapper script para executar jira_context_generator.py com o ambiente virtual
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_PATH="$SCRIPT_DIR/venv"
+
+if [ ! -d "$VENV_PATH" ]; then
+    echo "❌ Ambiente virtual não encontrado em: $VENV_PATH"
+    echo "Execute primeiro: python3 -m venv venv && source venv/bin/activate && pip install jira python-dotenv"
+    exit 1
+fi
+
+source "$VENV_PATH/bin/activate"
+python "$SCRIPT_DIR/jira_context_generator.py" "$@"
+deactivate
