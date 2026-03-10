@@ -13,7 +13,7 @@ Este guia explica como configurar e usar o script `jira_context_generator.py` pa
 ### Opção A: Usando ambiente virtual (recomendado)
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 python3 -m venv venv
 source venv/bin/activate
 pip install jira python-dotenv
@@ -28,7 +28,7 @@ pip3 install jira python-dotenv
 **Nota**: Sempre que for usar o script, ative o ambiente virtual primeiro:
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 source venv/bin/activate
 ```
 
@@ -130,7 +130,7 @@ chmod +x jira-context
 ### Opção 2: Ativando o venv manualmente
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 source venv/bin/activate
 python jira_context_generator.py PRIC-337
 ```
@@ -185,7 +185,7 @@ Após gerar o contexto, você pode:
 Ative o ambiente virtual e instale as dependências:
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 source venv/bin/activate
 pip install jira python-dotenv
 ```

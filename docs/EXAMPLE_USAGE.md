@@ -9,7 +9,7 @@ Este documento mostra na prática como usar o Jira Context Generator para extrai
 Primeiro, ative o ambiente virtual e execute o script:
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 source venv/bin/activate
 python jira_context_generator.py PRIC-600
 ```
@@ -116,7 +116,7 @@ Exemplo de estrutura criada:
 **1. Extrair contexto:**
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 ./jira-context PRIC-600
 ```
 
@@ -225,7 +225,7 @@ Ou abra no editor do Kiro para visualizar formatado.
 
 ### 3. Organizar arquivos gerados
 
-Os arquivos `*_context.md` ficam no diretório `jira-ai-context/`. Você pode movê-los ou referenciá-los diretamente no Kiro.
+Os arquivos `*_context.md` ficam no diretório `py-client-script-jira-context-generator/`. Você pode movê-los ou referenciá-los diretamente no Kiro.
 
 ## Problemas Comuns
 
@@ -234,7 +234,7 @@ Os arquivos `*_context.md` ficam no diretório `jira-ai-context/`. Você pode mo
 Você esqueceu de ativar o venv:
 
 ```bash
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 source venv/bin/activate
 pip install jira python-dotenv
 ```

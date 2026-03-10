@@ -10,7 +10,7 @@ Conecta-se ao Jira, busca detalhes de uma issue e gera um arquivo markdown estru
 
 ```bash
 # 1. Navegar até o diretório
-cd jira-ai-context
+cd py-client-script-jira-context-generator
 
 # 2. Criar e ativar ambiente virtual
 python3 -m venv venv
