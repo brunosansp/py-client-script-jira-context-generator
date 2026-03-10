@@ -10,9 +10,11 @@ import json
 from datetime import datetime
 
 # Carregar variáveis do arquivo .env se existir
+DOTENV_AVAILABLE = False
 try:
     from dotenv import load_dotenv
     load_dotenv()
+    DOTENV_AVAILABLE = True
 except ImportError:
     pass  # python-dotenv não é obrigatório se usar variáveis de ambiente
 
@@ -31,6 +33,11 @@ def load_jira_config():
 
     if not all([jira_url, jira_email, jira_token]):
         print("Erro: Configurações do Jira não encontradas.")
+
+        if not DOTENV_AVAILABLE:
+            print("\n⚠️  Aviso: Biblioteca 'python-dotenv' não detectada.")
+            print("   Se você usa um arquivo .env, instale com: pip install python-dotenv")
+
         print("\nConfigure as seguintes variáveis de ambiente:")
         print("  export JIRA_URL='https://sua-empresa.atlassian.net'")
         print("  export JIRA_EMAIL='seu-email@empresa.com'")
