@@ -5,4 +5,5 @@ __pycache__/
 *.pyc
 *_context.md
 *_context.txt
+contexts/
 .DS_Store

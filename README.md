@@ -19,7 +19,10 @@ source venv/bin/activate
 # 3. Instalar dependências
 pip install jira python-dotenv
 
-# 4. Configurar credenciais
+# 4. Adicionar permissão para executar os sh
+chmod +x setup_jira.sh jira-context
+
+# 5. Configurar credenciais
 ./setup_jira.sh
 ```
 

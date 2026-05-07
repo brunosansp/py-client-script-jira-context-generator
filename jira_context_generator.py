@@ -35,17 +35,17 @@ def load_jira_config():
         print("Erro: Configurações do Jira não encontradas.")
 
         if not DOTENV_AVAILABLE:
-            print("\n⚠️  Aviso: Biblioteca 'python-dotenv' não detectada.")
-            print("   Se você usa um arquivo .env, instale com: pip install python-dotenv")
+            print("\n⚠️ Aviso: Biblioteca 'python-dotenv' não detectada.")
+            print(" Se você usa um arquivo .env, instale com: pip install python-dotenv")
 
         print("\nConfigure as seguintes variáveis de ambiente:")
-        print("  export JIRA_URL='https://sua-empresa.atlassian.net'")
-        print("  export JIRA_EMAIL='seu-email@empresa.com'")
-        print("  export JIRA_API_TOKEN='seu-token-aqui'")
+        print(" export JIRA_URL='https://sua-empresa.atlassian.net'")
+        print(" export JIRA_EMAIL='seu-email@empresa.com'")
+        print(" export JIRA_API_TOKEN='seu-token-aqui'")
         print("\nPara gerar um token de API:")
-        print("  1. Acesse: https://id.atlassian.com/manage-profile/security/api-tokens")
-        print("  2. Clique em 'Create API token'")
-        print("  3. Copie o token gerado")
+        print(" 1. Acesse: https://id.atlassian.com/manage-profile/security/api-tokens")
+        print(" 2. Clique em 'Create API token'")
+        print(" 3. Copie o token gerado")
         sys.exit(1)
 
     return jira_url, jira_email, jira_token
@@ -66,10 +66,24 @@ def fetch_issue_details(jira, issue_key):
     """Busca detalhes completos de uma issue do Jira."""
     try:
         issue = jira.issue(issue_key, expand='changelog,renderedFields')
+        # Mapeia nomes dos campos (field name -> field id)
+        issue._field_names = {f['name']: f['id'] for f in jira.fields()}
         return issue
     except Exception as e:
         print(f"Erro ao buscar issue '{issue_key}': {e}")
         sys.exit(1)
+
+def _get_custom_field_value(issue, field_name):
+    """Busca o valor de um campo customizado pelo nome usando os metadados do Jira."""
+    field_map = getattr(issue, '_field_names', {})
+
+    # Busca o field_id correspondente ao nome do campo
+    for name, field_id in field_map.items():
+        if field_name.lower() in name.lower():
+            value = getattr(issue.fields, field_id, None)
+            if value and isinstance(value, str):
+                return value
+    return None
 
 def format_context(issue):
     """Formata as informações da issue em contexto para IA."""
@@ -131,6 +145,14 @@ def format_context(issue):
             context.append(ac)
             context.append("")
 
+    # Technical Acceptance Criteria (se existir)
+    tac = _get_custom_field_value(issue, 'Technical Acceptance Criteria')
+    if tac:
+        context.append("## Critérios de Aceitação Técnicos")
+        context.append("")
+        context.append(tac)
+        context.append("")
+
     # Subtasks
     if hasattr(issue.fields, 'subtasks') and issue.fields.subtasks:
         context.append("## Subtasks")
@@ -159,7 +181,7 @@ def format_context(issue):
         for idx, comment in enumerate(issue.fields.comment.comments[-5:], 1):
             context.append(f"### Comentário {idx}")
             context.append("")
-            context.append(f"**Autor**: {comment.author.displayName}  ")
+            context.append(f"**Autor**: {comment.author.displayName} ")
             context.append(f"**Data**: {comment.created}")
             context.append("")
             context.append(comment.body)
@@ -178,7 +200,6 @@ def main():
         sys.exit(1)
 
     issue_key = sys.argv[1].upper()
-
     print(f"Buscando informações da task: {issue_key}...")
 
     # Carrega configurações
@@ -193,8 +214,13 @@ def main():
     # Formata contexto
     context = format_context(issue)
 
+    # Cria diretório de saída: contexts/{ISSUE_KEY}/
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(script_dir, 'contexts', issue_key)
+    os.makedirs(output_dir, exist_ok=True)
+
     # Salva em arquivo
-    output_file = f"{issue_key}_context.md"
+    output_file = os.path.join(output_dir, f"{issue_key}_context.md")
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(context)
 
